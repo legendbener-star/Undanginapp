@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - Undangin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>body{font-family:'Montserrat',sans-serif}</style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
+        <div class="text-center mb-6">
+            <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg mx-auto mb-4">U</div>
+            <h2 class="text-2xl font-bold text-slate-800">Selamat Datang</h2>
+            <p class="text-sm text-slate-500">Masuk untuk melanjutkan draft undanganmu.</p>
+        </div>
+
+        <button id="btnGoogle" class="w-full bg-white border border-slate-300 text-slate-700 font-bold py-3 rounded-xl shadow-sm hover:bg-slate-50 transition flex items-center justify-center gap-3 mb-4">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
+            <span>Masuk dengan Google</span>
+        </button>
+
+        <div class="flex items-center gap-4 mb-4">
+            <div class="h-px bg-slate-200 flex-1"></div>
+            <span class="text-xs text-slate-400">atau email</span>
+            <div class="h-px bg-slate-200 flex-1"></div>
+        </div>
+
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
+                <input type="email" id="email" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition" placeholder="Email kamu..." required>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                <input type="password" id="password" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition" placeholder="Password kamu..." required>
+            </div>
+            <button type="submit" id="btnLogin" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition">
+                Masuk Akun
+            </button>
+        </form>
+
+        <p class="text-center text-xs text-slate-500 mt-6">
+            Belum punya akun? <a href="register.html" class="text-blue-600 font-bold hover:underline">Daftar Gratis</a>
+        </p>
+        <div class="text-center mt-4">
+            <a href="index.html" class="text-[10px] text-slate-400 hover:text-slate-600">← Kembali ke Beranda</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db, doc, setDoc, getDoc, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from './firebase-config.js';
+
+        // 1. MASUK EMAIL
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            btn.disabled = true; btn.innerText = "Memproses...";
+
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
+                // REDIRECT KE INDEX (HOME)
+                window.location.href = "index.html"; 
+            } catch (error) {
+                console.error(error);
+                alert("Login Gagal: Email atau password salah.");
+                btn.disabled = false; btn.innerText = 'Masuk Akun';
+            }
+        });
+
+        // 2. MASUK GOOGLE
+        document.getElementById('btnGoogle').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+
+                const docRef = doc(db, "invitations", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    await createDefaultData(user);
+                }
+                // REDIRECT KE INDEX (HOME)
+                window.location.href = "index.html";
+
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/popup-blocked') {
+                    alert("Popup diblokir browser! Izinkan popup.");
+                } else if (error.code !== 'auth/cancelled-popup-request') {
+                    alert("Gagal Login Google: " + error.message);
+                }
+            }
+        });
+
+        async function createDefaultData(user) {
+            const initialData = {
+                uid: user.uid,
+                email: user.email,
+                status_bayar: 'free', 
+                theme: 'gold', 
+                createdAt: new Date(),
+                intro: "The Wedding of",
+                pria: { nama: "Nama Pria", silsilah: "Putra Pertama", ayah: "Bpk...", ibu: "Ibu...", alamat: "" },
+                wanita: { nama: "Nama Wanita", silsilah: "Putri Pertama", ayah: "Bpk...", ibu: "Ibu...", alamat: "" },
+                acara: { judul: "Resepsi Pernikahan", sloka: "Om Swastyastu...", waktu: "", map: "", alamat_lokasi: "" },
+                amplop: { bank: "BCA", rek: "123456", an: "Nama" }
+            };
+            await setDoc(doc(db, "invitations", user.uid), initialData);
+        }
+    </script>
+</body>
+</html>

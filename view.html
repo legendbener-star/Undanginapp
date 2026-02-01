@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wedding</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = { theme: { extend: { colors: { 'brown': '#A07656', 'brown-dark': '#745339' }, fontFamily: { 'script': ['Great Vibes', 'cursive'], 'body': ['Montserrat', 'sans-serif'], 'serif': ['Cormorant Garamond', 'serif'] } } } }
+    </script>
+    <style>
+        body { background: linear-gradient(135deg, #fdfbf7 0%, #f2eadd 100%); color: #4A4A4A; overflow-x: hidden; min-height: 100vh; }
+        .bg-texture { background-image: url("https://www.transparenttextures.com/patterns/dust.png"); background-attachment: fixed; opacity: 0.5; }
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .photo-circle { width: 160px; height: 160px; border-radius: 50%; border: 4px solid white; outline: 1px solid #A07656; outline-offset: 4px; object-fit: cover; box-shadow: 0 15px 30px rgba(160, 118, 86, 0.15); background-color: #e5e5e5; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 32px rgba(160, 118, 86, 0.1); }
+    </style>
+</head>
+<body class="font-body selection:bg-brown selection:text-white relative">
+    <div class="bg-texture fixed inset-0 pointer-events-none z-0"></div>
+
+    <div id="bottom-nav" class="fixed bottom-6 left-0 right-0 z-50 transition-transform duration-700 translate-y-32 flex justify-center">
+        <div class="bg-brown/90 backdrop-blur-md text-white rounded-full px-8 py-3 shadow-2xl flex items-center gap-8">
+            <a href="#home" class="text-xl opacity-70 hover:opacity-100"><i class="fas fa-home"></i></a>
+            <a href="#mempelai" class="text-xl opacity-70 hover:opacity-100"><i class="fas fa-user-friends"></i></a>
+            <a href="#galeri" class="text-xl opacity-70 hover:opacity-100"><i class="fas fa-images"></i></a>
+            <a href="#acara" class="text-xl opacity-70 hover:opacity-100"><i class="fas fa-map-marker-alt"></i></a>
+            <button onclick="toggleMusic()" id="btn-music" class="w-8 h-8 bg-cream text-brown rounded-full flex items-center justify-center shadow spin-slow"><i class="fas fa-music text-xs"></i></button>
+        </div>
+    </div>
+    <audio id="bg-music" loop></audio>
+
+    <div id="cover" class="fixed inset-0 z-40 flex flex-col items-center justify-center p-6 text-center transition-transform duration-1000" style="background: linear-gradient(135deg, #fdfbf7 0%, #e8ded0 100%);">
+        <div class="relative z-10 space-y-6" data-aos="zoom-in">
+            <p id="cover_intro" class="text-xs tracking-[0.3em] uppercase text-brown font-bold">The Wedding of</p>
+            <div class="mx-auto relative my-8"><img id="cover_img" src="https://via.placeholder.com/200?text=Cover" class="photo-circle mx-auto"></div>
+            <h1 class="font-script text-6xl text-brown pr-2 drop-shadow-sm"><span id="cover_pria">Pria</span> <span class="text-3xl text-text-light">&</span> <span id="cover_wanita">Wanita</span></h1>
+            <div class="mt-10">
+                <p class="text-xs text-text-light mb-3 uppercase tracking-widest">Kepada Yth:</p>
+                <div class="glass-card px-8 py-4 rounded-xl inline-block min-w-[220px]"><h3 id="cover_tamu" class="text-xl font-bold text-text-main">Tamu Undangan</h3></div>
+            </div>
+            <button onclick="buka()" class="mt-6 bg-brown hover:bg-brown-dark text-white text-xs font-bold uppercase tracking-widest px-10 py-4 rounded-full shadow-xl transition transform hover:-translate-y-1">Buka Undangan</button>
+        </div>
+    </div>
+
+    <main id="main" class="hidden opacity-0 transition-opacity duration-1000 pb-32 relative z-10">
+        <section id="home" class="min-h-screen flex flex-col items-center justify-center text-center p-6 relative overflow-hidden">
+            <div class="relative z-10 space-y-4" data-aos="fade-up">
+                <div class="text-4xl text-brown mb-2">ॐ</div>
+                <h2 class="font-script text-4xl text-brown">Om Swastyastu</h2>
+                <p id="main_sloka" class="text-sm italic text-text-light leading-relaxed max-w-md mx-auto px-4 font-serif my-6">"..."</p>
+                <div class="py-10">
+                    <h1 class="font-script text-6xl text-text-main leading-snug"><span id="main_pria_nama">Putra</span> <br><span class="text-3xl text-brown">&</span> <br><span id="main_wanita_nama">Putri</span></h1>
+                </div>
+                <div class="border-t border-brown/20 pt-6 w-40 mx-auto"></div>
+                <p id="judul_acara_header" class="text-xs uppercase tracking-widest text-brown font-bold">Resepsi</p>
+                <p id="tgl_header" class="text-lg text-text-main font-serif mt-1">...</p>
+            </div>
+        </section>
+
+        <section id="mempelai" class="py-20 px-4 bg-white/30 backdrop-blur-sm rounded-3xl mx-2 my-4 border border-white/40 shadow-sm">
+            <div class="max-w-2xl mx-auto space-y-16 text-center">
+                
+                <div data-aos="fade-up">
+                    <img id="img_pria" src="https://via.placeholder.com/150?text=Pria" class="photo-circle mx-auto mb-8">
+                    <h2 id="full_pria" class="font-script text-5xl text-brown mb-3">Nama Pria</h2>
+                    
+                    <p class="text-xs font-bold text-brown uppercase tracking-wide mb-1">
+                        <span id="silsilah_pria">Putra</span> dari Pasangan
+                    </p>
+                    
+                    <p id="ortu_pria" class="font-bold text-text-main text-xl font-serif mt-1">Bpk & Ibu</p>
+                    <p id="alamat_pria" class="text-xs text-text-light mt-3 italic px-8 font-serif leading-relaxed">Alamat...</p>
+                </div>
+
+                <div class="text-4xl text-brown font-script opacity-50">&</div>
+
+                <div data-aos="fade-up">
+                    <img id="img_wanita" src="https://via.placeholder.com/150?text=Wanita" class="photo-circle mx-auto mb-8">
+                    <h2 id="full_wanita" class="font-script text-5xl text-brown mb-3">Nama Wanita</h2>
+                    
+                    <p class="text-xs font-bold text-brown uppercase tracking-wide mb-1">
+                        <span id="silsilah_wanita">Putri</span> dari Pasangan
+                    </p>
+                    
+                    <p id="ortu_wanita" class="font-bold text-text-main text-xl font-serif mt-1">Bpk & Ibu</p>
+                    <p id="alamat_wanita" class="text-xs text-text-light mt-3 italic px-8 font-serif leading-relaxed">Alamat...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="acara" class="py-20 px-4">
+            <div class="max-w-md mx-auto text-center glass-card p-8 rounded-3xl relative overflow-hidden" data-aos="zoom-in">
+                <h2 class="font-script text-5xl text-brown mb-8">Waktu & Tempat</h2>
+                <div class="space-y-2 mb-8">
+                    <h3 id="acara_judul" class="font-bold text-xl text-text-main uppercase tracking-wider">Acara</h3>
+                    <p id="acara_tanggal" class="text-3xl font-serif text-brown">...</p>
+                    <p id="acara_jam" class="text-md text-text-light font-medium">...</p>
+                </div>
+                
+                <p class="text-xs uppercase tracking-widest text-text-light mb-2">Bertempat di</p>
+                <p id="acara_lokasi" class="text-lg font-medium text-text-main px-4 leading-relaxed font-serif mb-6">Alamat...</p>
+
+                <div class="w-full h-64 bg-gray-200 rounded-xl overflow-hidden mb-6 shadow-inner border border-white">
+                    <iframe id="map_frame" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+
+                <a id="btn_map" href="#" target="_blank" class="inline-flex items-center bg-brown text-white text-sm font-bold uppercase px-8 py-3 rounded-full hover:bg-brown-dark transition shadow-lg mb-8">
+                    <i class="fas fa-location-arrow mr-2"></i> Buka Google Maps
+                </a>
+
+                <div class="grid grid-cols-4 gap-4 border-t border-brown/10 pt-6">
+                    <div><span id="cd_d" class="text-2xl font-serif text-brown">00</span><div class="text-[10px] text-text-light font-bold">HARI</div></div>
+                    <div><span id="cd_h" class="text-2xl font-serif text-brown">00</span><div class="text-[10px] text-text-light font-bold">JAM</div></div>
+                    <div><span id="cd_m" class="text-2xl font-serif text-brown">00</span><div class="text-[10px] text-text-light font-bold">MENIT</div></div>
+                    <div><span id="cd_s" class="text-2xl font-serif text-brown">00</span><div class="text-[10px] text-text-light font-bold">DETIK</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="galeri" class="py-20 px-2 hidden">
+            <h2 class="text-center font-script text-5xl text-brown mb-10">Our Gallery</h2>
+            <div id="galeri_container" class="grid grid-cols-2 gap-2 max-w-4xl mx-auto rounded-2xl overflow-hidden p-2 bg-white/40 shadow-sm"></div>
+        </section>
+
+        <section class="py-20 px-4">
+            <div class="max-w-md mx-auto" data-aos="fade-up">
+                <h2 class="text-center font-script text-5xl text-brown mb-4">Ucapan & Doa</h2>
+                <form class="space-y-4 glass-card p-8 rounded-3xl mb-12">
+                    <input type="text" id="rsvp_nama" class="w-full p-4 rounded-xl border border-brown/20 text-sm bg-white/80" readonly>
+                    <textarea class="w-full p-4 rounded-xl border border-brown/20 text-sm bg-white/80 h-32 resize-none" placeholder="Tulis ucapan..."></textarea>
+                    <button type="button" class="w-full bg-brown text-white py-4 rounded-xl font-bold shadow-lg uppercase tracking-widest text-sm">Kirim Ucapan</button>
+                </form>
+
+                <div class="text-center glass-card p-8 rounded-3xl mb-16">
+                    <i class="fas fa-gift text-3xl text-brown mb-4"></i>
+                    <p class="font-script text-3xl text-brown mb-2">Wedding Gift</p>
+                    <div class="bg-white/80 p-4 rounded-xl border border-brown/20 inline-block min-w-[250px]">
+                        <p id="rek_info" class="font-mono text-xl font-bold text-text-main tracking-wider mb-1">BANK</p>
+                        <p id="rek_an" class="text-sm text-text-light mb-3 font-medium">a.n</p>
+                        <button class="text-[10px] border-2 border-brown text-brown px-6 py-2 rounded-full uppercase font-bold hover:bg-brown hover:text-white transition">Salin Nomor</button>
+                    </div>
+                </div>
+
+                <div class="text-center px-4" data-aos="zoom-in">
+                    <p class="text-sm md:text-base text-text-main italic font-serif leading-relaxed mb-8">
+                        "Besar harapan kami Bapak/Ibu/Saudara/i dapat hadir dalam acara ini.<br> 
+                        Atas perhatian dan doa restunya kami ucapkan terimakasih."
+                    </p>
+                    <h2 class="font-script text-4xl md:text-5xl text-brown mt-4 mb-8">Om Santih Santih Santih Om</h2>
+                    <div class="w-16 h-1 bg-brown/30 mx-auto rounded-full"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-brown-dark text-white py-8 text-center">
+            <p class="text-[10px] opacity-60 uppercase tracking-[0.2em]">© 2026 Undangin Digital.</p>
+        </footer>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module">
+        import { db, doc, getDoc } from './firebase-config.js';
+        AOS.init({ duration: 1000, once: true, offset: 100 });
+
+        window.buka = () => {
+            document.getElementById('cover').style.transform = 'translateY(-100%)';
+            document.getElementById('main').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('main').classList.remove('opacity-0');
+                document.getElementById('bottom-nav').classList.remove('translate-y-32');
+            }, 300);
+            const audio = document.getElementById('bg-music');
+            if(audio.src) {
+                audio.play().then(() => document.getElementById('btn-music').classList.add('spin-slow'))
+                .catch(e => console.log("Audio block: " + e));
+            }
+        };
+
+        window.toggleMusic = () => {
+            const a = document.getElementById('bg-music');
+            const b = document.getElementById('btn-music');
+            if(a.src) { if(a.paused){ a.play(); b.classList.add('spin-slow'); } else { a.pause(); b.classList.remove('spin-slow'); } }
+        };
+
+        function getPanggilan(n){ 
+            if(!n)return""; const w=n.trim().split(" "); 
+            const pre=["I","Ni","Ida","Anak","Gusti","Dewa","Desak","Luh","Putu","Made","Nyoman","Ketut","Kadek","Komang","Wayan"]; 
+            return pre.includes(w[0]) ? (w[1]||w[0]) : w[0]; 
+        }
+
+        const p = new URLSearchParams(window.location.search);
+        const uid = p.get('uid');
+        const to = p.get('to') || "Tamu Undangan";
+        
+        document.getElementById('cover_tamu').innerText = to;
+        document.getElementById('rsvp_nama').value = to;
+
+        if(uid) {
+            getDoc(doc(db, "invitations", uid)).then(s => {
+                if(s.exists()) {
+                    const d = s.data();
+                    
+                    if(d.intro) document.getElementById('cover_intro').innerText = d.intro;
+                    
+                    const pp = getPanggilan(d.pria.nama); const pw = getPanggilan(d.wanita.nama);
+                    document.getElementById('cover_pria').innerText = pp; document.getElementById('cover_wanita').innerText = pw;
+                    document.getElementById('main_pria_nama').innerText = pp; document.getElementById('main_wanita_nama').innerText = pw;
+                    document.getElementById('cover_img').src = d.cover || 'https://via.placeholder.com/200?text=Cover';
+                    document.getElementById('main_sloka').innerText = `"${d.acara.sloka}"`;
+
+                    document.getElementById('full_pria').innerText = d.pria.nama; 
+                    // FIXED: Masukkan silsilah ke dalam span
+                    document.getElementById('silsilah_pria').innerText = d.pria.silsilah || "Putra";
+                    document.getElementById('ortu_pria').innerText = `${d.pria.ayah} & ${d.pria.ibu}`; 
+                    document.getElementById('alamat_pria').innerText = d.pria.alamat || "-"; 
+                    document.getElementById('img_pria').src = d.pria.foto || 'https://via.placeholder.com/150?text=Pria';
+
+                    document.getElementById('full_wanita').innerText = d.wanita.nama; 
+                    document.getElementById('silsilah_wanita').innerText = d.wanita.silsilah || "Putri";
+                    document.getElementById('ortu_wanita').innerText = `${d.wanita.ayah} & ${d.wanita.ibu}`; 
+                    document.getElementById('alamat_wanita').innerText = d.wanita.alamat || "-";
+                    document.getElementById('img_wanita').src = d.wanita.foto || 'https://via.placeholder.com/150?text=Wanita';
+
+                    const dt = new Date(d.acara.waktu);
+                    const m = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                    const tgl = `${dt.getDate()} ${m[dt.getMonth()]} ${dt.getFullYear()}`;
+                    document.getElementById('acara_tanggal').innerText = tgl; 
+                    document.getElementById('tgl_header').innerText = tgl;
+                    document.getElementById('acara_jam').innerText = `Pukul ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')} WITA`;
+                    
+                    document.getElementById('acara_judul').innerText = d.acara.judul; 
+                    document.getElementById('judul_acara_header').innerText = d.acara.judul;
+                    
+                    const lokasi = d.acara.alamat_lokasi || d.acara.map || "Bali"; 
+                    document.getElementById('acara_lokasi').innerText = lokasi;
+                    const mapQuery = encodeURIComponent(lokasi);
+                    document.getElementById('map_frame').src = `https://maps.google.com/maps?q=${mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                    document.getElementById('btn_map').href = d.acara.map || "#";
+
+                    const target = dt.getTime();
+                    setInterval(() => {
+                        const now = new Date().getTime(); const dist = target - now;
+                        if(dist>0){
+                            document.getElementById('cd_d').innerText = Math.floor(dist/86400000).toString().padStart(2,'0');
+                            document.getElementById('cd_h').innerText = Math.floor((dist%86400000)/3600000).toString().padStart(2,'0');
+                            document.getElementById('cd_m').innerText = Math.floor((dist%3600000)/60000).toString().padStart(2,'0');
+                            document.getElementById('cd_s').innerText = Math.floor((dist%60000)/1000).toString().padStart(2,'0');
+                        }
+                    }, 1000);
+
+                    if(d.status_bayar === 'premium') {
+                        if(d.premium_content && d.premium_content.musik) document.getElementById('bg-music').src = d.premium_content.musik;
+                        const gal = d.premium_content?.galeri || [];
+                        if(gal.length > 0) {
+                            document.getElementById('galeri').classList.remove('hidden');
+                            const c = document.getElementById('galeri_container');
+                            c.innerHTML = "";
+                            gal.forEach(u => { c.innerHTML += `<img src="${u}" class="w-full h-full object-cover aspect-square hover:scale-105 transition duration-500 cursor-pointer rounded-lg shadow" data-aos="zoom-in">`; });
+                        }
+                    }
+
+                    if(d.amplop) {
+                        document.getElementById('rek_info').innerText = `${d.amplop.bank} ${d.amplop.rek}`;
+                        document.getElementById('rek_an').innerText = `a.n ${d.amplop.an}`;
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
